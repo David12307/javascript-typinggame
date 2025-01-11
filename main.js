@@ -39,11 +39,14 @@ function adjustPosition() {
 
 window.addEventListener("DOMContentLoaded", () => {
     document.getElementById("container").style.display = 'none';
+    document.getElementById("results-div").style.display = 'none';
     document.getElementById('difficulty-input').value = 'medium';
     document.getElementById("category-input").value = 'quotes';
     adjustPosition();
     window.addEventListener("resize", adjustPosition);
 });
+
+let totalSeconds;
 
 document.getElementById('start-button').addEventListener('click', async () => {
     document.getElementById("start-menu").style.display = 'none';
@@ -53,8 +56,9 @@ document.getElementById('start-button').addEventListener('click', async () => {
     if (difficulty === 'medium') {
         startTimer(60, timer);
         timer.textContent = '60 seconds';
+        totalSeconds = 60;
     }
-    else startTimer(30, timer);
+    else startTimer(30, timer), totalSeconds = 30;
 
     sentences = await fetchJson(category);
 
@@ -95,19 +99,26 @@ textInput.addEventListener("input", () => {
     }
     if (completed === 5) {
         displayStats();
-        location.reload();
     }
 });
 
 function displayStats() {
-    alert(`
-        WPM: ${Math.round(charactersTyped / (5 * 0.5))},
-        Accuracy: ${Math.round((correctChars / charactersTyped) * 100)},
-        Typing speed: ${charactersTyped / 0.5},
-        Total time: 30 seconds,
-        Number of mistakes: ${mistakes},
-        Sentences completed: ${completed}
-    `)
+    let perMinute = totalSeconds = 30 ? 0.5 : 1;
+    const wpmText = document.getElementById("wpm");
+    const accText = document.getElementById("accuracy");
+    const typingSpeedText = document.getElementById("typingspeed");
+    const nomistakes = document.getElementById("nomistakes");
+    const sentencesCompleted = document.getElementById("sentencesCompleted");
+
+    wpmText.textContent = Math.round(charactersTyped / (5 * perMinute));
+    accText.textContent = `${Math.round((correctChars / charactersTyped) * 100)}%`;
+    typingSpeedText.textContent = charactersTyped / perMinute;
+    nomistakes.textContent = mistakes;
+    sentencesCompleted.textContent = completed;
+
+    document.getElementById("container").style.display = 'none';
+    document.getElementById("results-div").style.display = 'block';
+    document.getElementById("tryAgain-button").addEventListener('click', () => location.reload());
 }
 
 function startTimer(duration, display) {
@@ -118,7 +129,6 @@ function startTimer(duration, display) {
         if (--timer < 0) {
             timer = 0;
             displayStats();
-            location.reload();
         }
     }, 1000)
 }
