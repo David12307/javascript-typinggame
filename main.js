@@ -1,33 +1,22 @@
-const sentences = [
-    "I can do all things through Christ who strengthens me.",
-    "For God so loved the world that He gave His only Son.",
-    "The Lord is my shepherd; I shall not want.",
-    "Trust in the Lord with all your heart and lean not on your own understanding.",
-    "Be strong and courageous. Do not be afraid; do not be discouraged.",
-    "For I know the plans I have for you, declares the Lord.",
-    "This is the day that the Lord has made; let us rejoice and be glad in it.",
-    "The Lord is close to the brokenhearted and saves those who are crushed in spirit.",
-    "Let all that you do be done in love.",
-    "Cast all your anxiety on Him because He cares for you.",
-    "Do not be overcome by evil, but overcome evil with good.",
-    "In the beginning, God created the heavens and the earth.",
-    "The joy of the Lord is your strength.",
-    "Come to me, all who are weary and burdened, and I will give you rest.",
-    "And we know that in all things God works for the good of those who love Him.",
-    "God is our refuge and strength, an ever-present help in trouble.",
-    "Faith is the assurance of things hoped for, the conviction of things not seen.",
-    "Do to others as you would have them do to you.",
-    "The light shines in the darkness, and the darkness has not overcome it.",
-    "For where your treasure is, there your heart will be also."
-];
+let sentences;
+
+function fetchJson(category) {
+    return fetch("sentences.json")
+        .then(response => {
+            if (!response.ok) throw new Error("Error fetching the json file.");
+            return response.json();
+        })
+        .then(data => {
+            return data[category];
+        })
+        .catch(err => {
+            console.error("Error ", err);
+        });
+}
   
 const textInput = document.getElementById("textInput");
 textInput.value = '';
-let sentence = sentences[Math.floor(Math.random() * sentences.length)];
-document.getElementById("sentence").innerHTML = sentence;
-
-const sentenceArray = sentence.split(" ");
-const wordsArray = [];
+let sentence;
 
 function adjustPosition() {
     const sentenceElement = document.getElementById("sentence");
@@ -45,12 +34,38 @@ function adjustPosition() {
     const textWidth = span.offsetWidth;
     document.body.removeChild(span);
 
-    textInput.style.width = `${textWidth + 10}px`;
+    textInput.style.width = `${textWidth + 20}px`;
 }
 
-adjustPosition();
+window.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("container").style.display = 'none';
+    document.getElementById('difficulty-input').value = 'medium';
+    document.getElementById("category-input").value = 'quotes';
+    adjustPosition();
+    window.addEventListener("resize", adjustPosition);
+});
 
-startTimer(30, document.getElementById("timer"));
+document.getElementById('start-button').addEventListener('click', async () => {
+    document.getElementById("start-menu").style.display = 'none';
+    const difficulty = document.getElementById("difficulty-input").value;
+    const category = document.getElementById("category-input").value;
+    const timer = document.getElementById("timer");
+    if (difficulty === 'medium') {
+        startTimer(60, timer);
+        timer.textContent = '60 seconds';
+    }
+    else startTimer(30, timer);
+
+    sentences = await fetchJson(category);
+
+    sentence = sentences[Math.floor(Math.random() * sentences.length)];
+    document.getElementById("sentence").innerHTML = sentence.text;
+    document.getElementById('ref-text').innerHTML = sentence.reference;
+
+    document.getElementById("container").style.display = 'block';
+    textInput.focus();
+    adjustPosition();
+});
 
 let mistakes = 0;
 let completed = 0;
@@ -58,9 +73,9 @@ let charactersTyped = 0;
 let correctChars = 0;
 textInput.addEventListener("input", () => {
     const text = textInput.value;
-    textInput.maxLength = sentence.length;
+    textInput.maxLength = sentence.text.length;
 
-    if (text[text.length-1] === sentence[text.length-1]) {
+    if (text[text.length-1] === sentence.text[text.length-1]) {
         console.log(true);
         correctChars += 1;
     } else {
@@ -70,12 +85,17 @@ textInput.addEventListener("input", () => {
     charactersTyped += 1;
 
     // Check winning conditions
-    if (textInput.value.length === sentence.length && textInput.value === sentence) {
+    if (textInput.value.length === sentence.text.length && textInput.value === sentence.text) {
         completed += 1;
         sentence = sentences[Math.floor(Math.random() * sentences.length)];
-        document.getElementById("sentence").innerHTML = sentence;
+        document.getElementById("sentence").innerHTML = sentence.text;
+        document.getElementById('ref-text').innerHTML = sentence.reference;
         textInput.value = '';
         adjustPosition();
+    }
+    if (completed === 5) {
+        displayStats();
+        location.reload();
     }
 });
 
@@ -85,12 +105,13 @@ function displayStats() {
         Accuracy: ${Math.round((correctChars / charactersTyped) * 100)},
         Typing speed: ${charactersTyped / 0.5},
         Total time: 30 seconds,
-        Number of mistakes: ${mistakes}
+        Number of mistakes: ${mistakes},
+        Sentences completed: ${completed}
     `)
 }
 
 function startTimer(duration, display) {
-    var timer = duration, seconds;
+    var timer = duration-1, seconds;
     setInterval(() => {
         seconds = parseInt(timer % 60, 10);
         display.textContent = `${seconds} seconds`;

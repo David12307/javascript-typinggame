@@ -7,10 +7,39 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1 id="timer"></h1>
+    <div id="start-menu">
+        <h1 id="emoji">👋</h1>
+        <h1>Welcome to <a id="profile-link" href="https://github.com/David12307/javascript-typinggame" target="_blank">David12307</a>'s</h1>
+        <h1 id="project-name">Typing Game</h1>
+
+        <div id="options-div">
+            <div class="option">
+                <p>Choose a category:</p>
+                <select id="category-input">
+                    <option value="quotes" selected>Quotes</option>
+                    <option value="biology" >Biology</option>
+                    <option value="verses">Bible verses</option>
+                </select>
+            </div>
+            <div class="option">
+                <p>Choose difficulty:</p>
+                <select id="difficulty-input">
+                    <option value="medium" selected>Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+        </div>
+        
+        <p>You get <span class="highlight">5 sentences</span> per round and <span class="highlight">60/30 seconds</span> to finish them.</p>
+        
+        <button type="submit" id="start-button">Start!</button>
+
+    </div>
     <div id="container">
+        <h1 id="timer">30 seconds</h1>
         <h4 id="sentence">Type this text to test your speed!</h4>
-        <input type="" id="textInput" autofocus>
+        <input type="" id="textInput">
+        <p id="ref-text">Reference</p>
     </div>
     <script src="main.js"></script>
 </body>

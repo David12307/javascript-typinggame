@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Cutive&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 
 #container {
     text-align: center;
@@ -12,9 +13,83 @@
 #textInput {
     outline: none;
     border: none;
-    border-bottom: 2px solid black;
+    border-bottom: 2px solid #344CB7;
     text-align: center;
     font-size: 1.5rem;
     font-family: "Cutive", serif;
     padding: 10px;
+}
+
+#ref-text {
+    margin-top: 50px;
+}
+
+#start-menu {
+    font-family: "Roboto Mono", serif;
+    margin: auto auto;
+    width: 50%;
+    text-align: center;
+}
+
+#emoji {
+    font-size: 3rem;
+}
+
+#profile-link {
+    text-decoration: none;
+    color: #344CB7;
+    transition: all 0.5s ease;
+}
+
+#profile-link:hover {
+    font-size: 33px;
+}
+
+#options-div {
+    display: grid;
+    grid-template-columns: auto auto;
+    margin-bottom: 50px;
+}
+
+.highlight {
+    background-color: rgba(52, 76, 183, .3)
+}
+
+.option select {
+    background-color: white;
+    border: 1px solid grey;
+    padding: 10px 40px;
+    cursor: pointer;
+}
+
+#start-button {
+    padding: 10px 20px;
+    width: 200px;
+    margin-bottom: 50px;
+    margin-top: 30px;
+    font-size: 20px;
+    background-color: white;
+    border: 1px solid grey;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 50px;
+    font-weight: bold;
+}
+
+#start-button:hover {
+    width: 220px;
+    height: 55px;
+    background-color: rgba(52, 76, 183);
+    color: white;
+    border: 1px solid white;
+    text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+    #options-div {
+        grid-template-columns: auto;
+    }
+    #start-menu {
+        width: 100%;
+    }
 }
