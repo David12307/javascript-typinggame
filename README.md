@@ -16,11 +16,13 @@ A fun and simple typing speed game where users can test and improve their typing
 6. View your stats at the end of the game
 
 # Project structure
+```
 ├── index.html # Main HTML file
 ├── styles.css # CSS for styling
 ├── main.js # Core JavaScript functionality
 ├── sentences.json # JSON file with all the sentences
 └── README.md # The file you're reading right now
+```
 
 # Future improvements
 If I will revisit this project I would add:
