@@ -75,13 +75,14 @@ textInput.addEventListener("input", () => {
         sentence = sentences[Math.floor(Math.random() * sentences.length)];
         document.getElementById("sentence").innerHTML = sentence;
         textInput.value = '';
+        adjustPosition();
     }
 });
 
 function displayStats() {
     alert(`
-        WPM: ${charactersTyped / (5 * 0.5)},
-        Accuracy: ${(correctChars / charactersTyped) * 100},
+        WPM: ${Math.round(charactersTyped / (5 * 0.5))},
+        Accuracy: ${Math.round((correctChars / charactersTyped) * 100)},
         Typing speed: ${charactersTyped / 0.5},
         Total time: 30 seconds,
         Number of mistakes: ${mistakes}
